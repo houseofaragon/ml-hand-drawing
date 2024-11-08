@@ -6,19 +6,21 @@ import Video from './Video';
 function App() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [isVideoReady, setIsVideoReady] = useState(false); // Track video readiness
+  const [isVideoReady, setIsVideoReady] = useState<boolean>(false); // Track video readiness
 
   // Only pass videoRef to usePoseDetection if the video is ready
   const { indexFingerPosition } = usePoseDetection(isVideoReady ? videoRef : null);
 
   // Wait for the video element to load
   useEffect(() => {
-    if (videoRef.current) {
+    const current = videoRef.current;
+    
+    if (current) {
       const handleLoadedData = () => setIsVideoReady(true);
-      videoRef.current.addEventListener('loadeddata', handleLoadedData);
+      current.addEventListener('loadeddata', handleLoadedData);
 
       return () => {
-        videoRef.current!.removeEventListener('loadeddata', handleLoadedData);
+        current.removeEventListener('loadeddata', handleLoadedData);
       };
     }
   }, []);
